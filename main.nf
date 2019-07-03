@@ -75,7 +75,6 @@ process pindel_noChunk {
     // file("${output_vcf}")
     // file("${multiallelics_stats}")
     // file("${realign_stats}")
-
     // when: params.disable != "true"
 
     script:
@@ -193,7 +192,6 @@ input_bams2.combine(chromChunk_targets).map { comparisonID, tumorID, normalID, t
 process pindel_chromChunk {
     tag "${prefix}"
     publishDir "${params.outputDir}/variants", overwrite: true, mode: 'copy'
-    // echo true
 
     input:
     set val(label), val(chrom), val(comparisonID), val(tumorID), val(normalID), file(tumorBam), file(tumorBai), file(normalBam), file(normalBai), file("targets.bed"), file(ref_fasta), file(ref_fai), file(ref_dict) from input_chromChunk_ch
@@ -222,7 +220,14 @@ process pindel_chromChunk {
     --config-file "${config_file}" \
     --output-prefix "${output_dir}/" \
     --number_of_threads \${NSLOTS:-\${NTHREADS:-1}} \
-    --include "${targets_bed}"
+    --include "targets.bed"
+
+    pindel2vcf \
+    --pindel_output_root "${output_dir}/" \
+    --reference "${ref_fasta}" \
+    --reference_name hg19 \
+    --reference_date 2012_03_15 \
+    --gatk_compatible
     """
 }
 
@@ -350,7 +355,7 @@ process pindel_nChunk {
     --config-file "${config_file}" \
     --output-prefix "${output_dir}/" \
     --number_of_threads \${NSLOTS:-\${NTHREADS:-1}} \
-    --include "${targets_bed}"
+    --include "targets.bed"
     """
 }
 
@@ -482,7 +487,7 @@ process pindel_lineChunk {
     --config-file "${config_file}" \
     --output-prefix "${output_dir}/" \
     --number_of_threads \${NSLOTS:-\${NTHREADS:-1}} \
-    --include "${targets_bed}"
+    --include "targets.bed"
     """
 }
 
