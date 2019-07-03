@@ -81,11 +81,12 @@ process pindel_noChunk {
     label = "noChunk"
     prefix = "${comparisonID}.${label}"
     config_file = "pindel_config.txt"
-    output_dir = "output"
+    output_dir = "${prefix}.pindel_output"
+    output_vcf = "${prefix}.vcf"
     """
     # make config file for Pindel
-    printf "${tumorBam}\t${params.insert_size}\tTumor\n" > "${config_file}"
-    printf "${normalBam}\t${params.insert_size}\tNormal\n" >> "${config_file}"
+    printf "${tumorBam}\t${params.insert_size}\tTUMOR\n" > "${config_file}"
+    printf "${normalBam}\t${params.insert_size}\tNORMAL\n" >> "${config_file}"
 
     mkdir "${output_dir}"
 
@@ -95,6 +96,14 @@ process pindel_noChunk {
     --output-prefix "${output_dir}/" \
     --number_of_threads \${NSLOTS:-\${NTHREADS:-1}} \
     --include "${targets_bed}"
+
+    pindel2vcf \
+    --pindel_output_root "${output_dir}/" \
+    --reference "${ref_fasta}" \
+    --reference_name hg19 \
+    --reference_date 2012_03_15 \
+    --gatk_compatible \
+    --vcf "${output_vcf}"
     """
 }
 //
@@ -207,11 +216,12 @@ process pindel_chromChunk {
     script:
     prefix = "${comparisonID}.${label}.${chrom}"
     config_file = "pindel_config.txt"
-    output_dir = "output"
+    output_dir = "${prefix}.pindel_output"
+    output_vcf = "${prefix}.vcf"
     """
     # make config file for Pindel
-    printf "${tumorBam}\t${params.insert_size}\tTumor\n" > "${config_file}"
-    printf "${normalBam}\t${params.insert_size}\tNormal\n" >> "${config_file}"
+    printf "${tumorBam}\t${params.insert_size}\tTUMOR\n" > "${config_file}"
+    printf "${normalBam}\t${params.insert_size}\tNORMAL\n" >> "${config_file}"
 
     mkdir "${output_dir}"
 
@@ -227,7 +237,8 @@ process pindel_chromChunk {
     --reference "${ref_fasta}" \
     --reference_name hg19 \
     --reference_date 2012_03_15 \
-    --gatk_compatible
+    --gatk_compatible \
+    --vcf "${output_vcf}"
     """
 }
 
@@ -282,7 +293,7 @@ process pindel_chromChunk {
 //     # add extra columns to the VCF TSV file for downstream
 //     reformat-vcf-table.py -c MuTect2 -s "${tumorID}" -i "${tsv_file}" | \
 //     paste-col.py --header "Sample" -v "${tumorID}"  | \
-//     paste-col.py --header "Tumor" -v "${tumorID}"  | \
+//     paste-col.py --header "TUMOR" -v "${tumorID}"  | \
 //     paste-col.py --header "Normal" -v "${normalID}"  | \
 //     paste-col.py --header "VariantCaller" -v "${caller}" > \
 //     "${reformat_tsv}"
@@ -342,11 +353,12 @@ process pindel_nChunk {
     script:
     prefix = "${comparisonID}.${chunkLabel}.${targetChunkNum}"
     config_file = "pindel_config.txt"
-    output_dir = "output"
+    output_dir = "${prefix}.pindel_output"
+    output_vcf = "${prefix}.vcf"
     """
     # make config file for Pindel
-    printf "${tumorBam}\t${params.insert_size}\tTumor\n" > "${config_file}"
-    printf "${normalBam}\t${params.insert_size}\tNormal\n" >> "${config_file}"
+    printf "${tumorBam}\t${params.insert_size}\tTUMOR\n" > "${config_file}"
+    printf "${normalBam}\t${params.insert_size}\tNORMAL\n" >> "${config_file}"
 
     mkdir "${output_dir}"
 
@@ -356,6 +368,14 @@ process pindel_nChunk {
     --output-prefix "${output_dir}/" \
     --number_of_threads \${NSLOTS:-\${NTHREADS:-1}} \
     --include "targets.bed"
+
+    pindel2vcf \
+    --pindel_output_root "${output_dir}/" \
+    --reference "${ref_fasta}" \
+    --reference_name hg19 \
+    --reference_date 2012_03_15 \
+    --gatk_compatible \
+    --vcf "${output_vcf}"
     """
 }
 
@@ -474,11 +494,12 @@ process pindel_lineChunk {
     script:
     prefix = "${comparisonID}.${chunkLabel}.${targetChunkNum}"
     config_file = "pindel_config.txt"
-    output_dir = "output"
+    output_dir = "${prefix}.pindel_output"
+    output_vcf = "${prefix}.vcf"
     """
     # make config file for Pindel
-    printf "${tumorBam}\t${params.insert_size}\tTumor\n" > "${config_file}"
-    printf "${normalBam}\t${params.insert_size}\tNormal\n" >> "${config_file}"
+    printf "${tumorBam}\t${params.insert_size}\tTUMOR\n" > "${config_file}"
+    printf "${normalBam}\t${params.insert_size}\tNORMAL\n" >> "${config_file}"
 
     mkdir "${output_dir}"
 
@@ -488,6 +509,14 @@ process pindel_lineChunk {
     --output-prefix "${output_dir}/" \
     --number_of_threads \${NSLOTS:-\${NTHREADS:-1}} \
     --include "targets.bed"
+
+    pindel2vcf \
+    --pindel_output_root "${output_dir}/" \
+    --reference "${ref_fasta}" \
+    --reference_name hg19 \
+    --reference_date 2012_03_15 \
+    --gatk_compatible \
+    --vcf "${output_vcf}"
     """
 }
 
