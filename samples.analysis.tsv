@@ -1,0 +1,2 @@
+Tumor	Normal	Tumor_Bam	Tumor_Bai	Normal_Bam	Normal_Bai
+Tumor1	Normal1	input/HapMap-B17-1267.dd.bam	input/HapMap-B17-1267.dd.bam.bai	input/SeraCare-1to1-Positive.dd.bam	input/SeraCare-1to1-Positive.dd.bam.bai

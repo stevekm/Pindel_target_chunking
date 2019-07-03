@@ -1,0 +1,13 @@
+.nextflow.log
+.nextflow/
+NGS580-nf/
+input/
+logs/
+nextflow
+add
+work/
+trace.txt
+output/
+.nextflow.*
+.Rproj.user
+*.Rproj
