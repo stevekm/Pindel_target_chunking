@@ -636,7 +636,7 @@ line_chunked_targets.flatten()
 
 process pindel_lineChunk {
     tag "${prefix}"
-    publishDir "${params.outputDir}/lineChunk/raw", overwrite: true, mode: 'copy'
+    publishDir "${params.outputDir}/${chunkLabel}/raw", overwrite: true, mode: 'copy'
 
     input:
     set val(chunkLabel), val(targetChunkNum), val(comparisonID), val(tumorID), val(normalID), file(tumorBam), file(tumorBai), file(normalBam), file(normalBai), file("targets.bed"), file(ref_fasta), file(ref_fai), file(ref_dict) from input_lineChunk_ch
@@ -722,7 +722,7 @@ process filter_vcf_lineChunk {
 
 process vcf_to_tsv_lineChunk {
     tag "${prefix}"
-    publishDir "${params.outputDir}/raw", overwrite: true, mode: 'copy'
+    publishDir "${params.outputDir}/${chunkLabel}/raw", overwrite: true, mode: 'copy'
 
     input:
     set val(chunkLabel), val(targetChunkNum), val(comparisonID), val(tumorID), val(normalID), file(vcf), file(ref_fasta), file(ref_fai), file(ref_dict) from variants_lineChunk_filtered.combine(ref_fasta8).combine(ref_fai8).combine(ref_dict8)
@@ -862,7 +862,7 @@ process annotate {
 process merge_tables {
     // merge the annotation and vcf tables
     tag "${prefix}"
-    publishDir "${params.outputDir}", mode: 'copy'
+    publishDir "${params.outputDir}/annotations", mode: 'copy'
 
     input:
     set val(type), val(label), file(vcf), file(tsv), file(annovar_txt), file(avinput_tsv) from vcfs_tsvs_annotations
